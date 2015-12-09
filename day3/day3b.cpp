@@ -13,9 +13,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
   ifstream fin(argv[1]);
-  map<int, map<int,int> > santaPath;
-  map<int, map<int,int> > roboSantaPath; // Is this how Skynet begins?
-                                         // What have you wrought on us, Santa?
+  map<int, map<int,int> > santasPath; // Is this how Skynet begins?
+                                      // What have you wrought on us, Santa?
 
   char dir;
   int count = 0, numHouses = 1;
@@ -31,12 +30,12 @@ int main(int argc, char **argv) {
     printf("Uh, invalid file bro.\n");
   }
 
-  santaPath[0][0]++;  
+  santasPath[0][0]++;  
 
   while (fin >> dir) {
     
     // If it's odd
-    if (count % 2) { 
+    if (count++ % 2) { 
       x = &robotX;
       y = &robotY;
     }
@@ -59,16 +58,12 @@ int main(int argc, char **argv) {
       --*x;
     }
 
-    // If it's odd
-    if (count++ % 2 && ++roboSantaPath[*x][*y] == 1 && !santaPath[*x][*y]) {
+    // If it's the first time we visited this house, then
+    // log in.
+    if (!santasPath[*x][*y]++) {
       numHouses++;
     }
-    // If it's even
-    else if (++santaPath[*x][*y] == 1 && !roboSantaPath[*x][*y]) {
-      numHouses++;	
-    }
   }
-
   cout << "Santa and his robotic compatriot have visited " << numHouses << " lucky houses this year!" << endl;
 
   return 0;
