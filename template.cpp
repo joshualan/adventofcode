@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
 
   if (!fin) {
     cout << "Uh, invalid file bro.\n" ;
+    return -1;
   }
 
   return 0;
