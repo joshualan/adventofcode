@@ -22,12 +22,13 @@ int main(int argc, char **argv) {
   int robotX = 0, robotY = 0, realX = 0, realY = 0, *x,  *y;
 
   if (argc != 2) {
-    printf( "Incorrect number of args, give me an input file!\n");
+    cout << "Incorrect number of args, give me an input file!\n";
     return -1;
   }
 
   if (!fin) {
-    printf("Uh, invalid file bro.\n");
+    cout << "Uh, invalid file bro.\n";
+    return -1;
   }
 
   santasPath[0][0]++;  

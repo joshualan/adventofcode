@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
 
   if (!fp) {
     printf("Uh, invalid file bro.\n");
+    return -1;
   }
 
   while (fscanf(fp, "%d %d %d", &w, &l,  &h) != EOF) {

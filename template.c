@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 
   if (!fp) {
     printf("Uh, invalid file bro.\n");
+    return -1;
   }
 
   return 0;

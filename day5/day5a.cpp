@@ -1,4 +1,4 @@
-// Solution for Day 3a for adventofcode.com Puzzles!
+// Solution for Day 5a for adventofcode.com Puzzles!
 // by Alan Estrada
 // 
 // If programmers don't code Christmas puzzles, Krampus
@@ -10,7 +10,8 @@
 #include <fstream>
 
 using namespace std;
-// I used C++ because maps work perfectly for this!
+// I used C++ because maps are pretty great
+// Maybe I'll stop using C and just use C++... :)
 
 int main(int argc, char **argv) {
   ifstream fin(argv[1]);
@@ -23,13 +24,12 @@ int main(int argc, char **argv) {
   int x = 0, y = 0;
 
   if (argc != 2) {
-    cout << "Incorrect number of args, give me an input file!\n";
+    printf( "Incorrect number of args, give me an input file!\n");
     return -1;
   }
 
   if (!fin) {
-    cout << "Uh, invalid file bro.\n" ;
-    return -1;
+    printf("Uh, invalid file bro.\n");
   }
 
   santaPath[x][y]++;  
