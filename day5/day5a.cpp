@@ -6,55 +6,82 @@
 
 
 #include <iostream>
-#include <map>
 #include <fstream>
+#include <string>
 
+// I know this is bad but this is a casual coding thing
 using namespace std;
-// I used C++ because maps are pretty great
-// Maybe I'll stop using C and just use C++... :)
+
+int isVowel(char c) {
+  switch (c) {
+  case 'a':
+  case 'e':
+  case 'i':
+  case 'o':
+  case 'u':
+    return 1;
+  }
+  return 0;
+}
+
+int isNaughty(string str) {
+  if (str.find(string("ab")) == string::npos &&
+      str.find(string("cd")) == string::npos &&
+      str.find(string("pq")) == string::npos &&
+      str.find(string("xy")) == string::npos) {
+    return 0;
+  }
+  return 1;
+}
 
 int main(int argc, char **argv) {
   ifstream fin(argv[1]);
-  map<int, map<int,int> > santaPath;
-  char dir;
-  map<int, map<int, int> >::iterator iter;
 
-  int numHouses = 0;
-
-  int x = 0, y = 0;
+  int numVowels;
+  int hasDouble;
+  int numNiceStrings = 0;
+  string line;
+  char prevCh;
 
   if (argc != 2) {
-    printf( "Incorrect number of args, give me an input file!\n");
+    cout << "Incorrect number of args, give me an input file!\n" ;
     return -1;
   }
 
   if (!fin) {
-    printf("Uh, invalid file bro.\n");
+    cout << "Uh, invalid file bro.\n" ;
+    return -1;
   }
 
-  santaPath[x][y]++;  
+  while (getline(fin, line)) {
+      numVowels = hasDouble = 0;
+      prevCh = 0;
 
-  while (fin >> dir) {
-    if (dir == '^') {
-      y++;
-    }
-    else if (dir == 'v') {
-      y--;
-    }
-    else if (dir == '>') {
-      x++;
-    }
-    else if (dir == '<') {
-      x--;
-    }
-    santaPath[x][y]++;
+      for(string::iterator iter = line.begin(); iter != line.end(); ++iter) {
+	numVowels += isVowel(*iter);
+
+	if (!prevCh)  {
+	  prevCh = *iter;
+	  continue;
+	}
+	
+	if (prevCh == *iter) {
+	  hasDouble++;
+	}
+
+	prevCh = *iter;
+	
+	// Optimization
+	if (hasDouble && numVowels == 3) {
+	  break;
+	}
+      }
+
+      if (hasDouble && numVowels >= 3 && !isNaughty(line)) {
+	numNiceStrings++;
+      }
   }
 
-  for (iter = santaPath.begin();  iter != santaPath.end(); iter++) {
-    numHouses += iter->second.size();
-  }
-
-  cout << "Santa has visited " << numHouses << " lucky houses this year!" << endl;
-
+  cout << "Ho ho ho! The number of nice strings is " << numNiceStrings << "!" ;
   return 0;
 }
