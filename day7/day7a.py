@@ -1,84 +1,50 @@
-#!/usr/bin/env python
+import collections
 
-"""day7a.py: Solution for the Day 7a puzzle.
-
-That's enough practice for C++, time for Python.
-
-"""
-
-__author__      = "Alan Estrada"
-
-
-import sys
-from collections import defaultdict
-
-# All these are short because 16 bits = 2 bytes = short...
-# My C is showing...
 def shortNOT(val):
-    return ~(val & 65`535)
+    return (~(val & 65535) & 65535)
 
 def shortLSHIFT(val, shift):
-    return (val << shift) & 65535
+    return ((val & 65535) << shift) & 65535
 
 def shortRSHIFT(val, shift):
-    return (val >> shift) & 65535
+    return ((val & 65535) >> shift) & 65535
 
 def shortAND(val1, val2):
     return (val1 & 65535) & (val2 & 65535)
 
 def shortOR(val1, val2):
-    return (val1 & 65535) & (val2 & 65535)
+    return (val1 & 65535) | (val2 & 65535)
 
 
-if len(sys.argv) < 2:
-    print "Feed me a file and Krampus stays away."
-    sys.exit(0)
+wires = collections.defaultdict(int)
 
-f = open(sys.argv[1], 'r')
+with open('input.txt') as f:
+    for line in f:
+        words = line.split()
 
-# Initialize the wires
-wires = defaultdict(int)
-wires['a'] = 0
+        if words[1] == '->':
+            if words[0].isdigit():
+                wires[words[2]] = int(words[0])
+            else:
+                wires[words[2]] = wires[words[0]]
 
-for line in f:
-    words = line.split()
+        if words[0] == 'NOT':
+            wires[words[3]] = shortNOT(wires[words[1]])
 
-    # NOT statements are split: [NOT, gate, ->, gate]
-    if words[0] == 'NOT':
-        wires[words[3]] = shortNOT(wires[words[1]])
-        continue
+        if words[1] == 'AND':
+            if words[0].isdigit():
+                wires[words[4]] = shortAND(int(words[0]), wires[words[2]])
+            else:
+                wires[words[4]] = shortAND(wires[words[0]], wires[words[2]])
 
-    if words[1] == '->':
-        input = int(words[0]) if words[0].isdigit() else wires[words[0]]
-        wires[words[2]] = input
-        continue
+        if words[1] == 'OR':
+            wires[words[4]] = shortOR(wires[words[0]], wires[words[2]])
 
-    # 1st input
-    input1 = int(words[0]) if words[0].isdigit() else wires[words[0]]
-    # 2nd input
-    input2 = int(words[2]) if words[2].isdigit() else wires[words[2]]
-    # Gate
-    gate = words[1]
-    # Output
-    output = words[4]
+        if words[1] == 'LSHIFT':
+            wires[words[4]] = shortLSHIFT(wires[words[0]], int(words[2]))
 
-    if gate == 'AND':
-        wires[output] = shortAND(input1, input2)
-    elif gate == 'OR':
-        wires[output] = shortOR(input1, input2)
-    elif gate == 'LSHIFT':
-        wires[output] = shortLSHIFT(input1, input2)
-    elif gate == 'RSHIFT':
-        wires[output] = shortRSHIFT(input1, input2)
+        if words[1] == 'RSHIFT':
+            wires[words[4]] = shortRSHIFT(wires[words[0]], int(words[2]))
+    
 
-#print wires['x']
-#print wires['y']
-
-#print wires['d']
-#print wires['e']
-
-#print wires['f']
-#print wires['g']
-
-#print wires['h']
 print wires['a']
