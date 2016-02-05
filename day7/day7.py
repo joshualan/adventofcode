@@ -77,3 +77,4 @@ print wires['a']
 
 # Note: Answer to Input A is 956
 # Answer to Input B is 40149
+# All that's different for B is we added an extra line
