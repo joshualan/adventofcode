@@ -1,5 +1,3 @@
-import collections
-
 def shortNOT(val):
     return (~(val & 65535) & 65535)
 
@@ -16,35 +14,56 @@ def shortOR(val1, val2):
     return (val1 & 65535) | (val2 & 65535)
 
 
-wires = collections.defaultdict(int)
+def findVal(lines, wires, wire):
+    if wire in wires:
+        return wires[wire]
 
-with open('input.txt') as f:
-    for line in f:
+    if wire.isdigit():
+        return int(wire)
+
+    for line in lines:
         words = line.split()
 
+        # Simple assignment
         if words[1] == '->':
-            if words[0].isdigit():
-                wires[words[2]] = int(words[0])
-            else:
-                wires[words[2]] = wires[words[0]]
+            if words[2] != wire:
+                continue
 
-        if words[0] == 'NOT':
-            wires[words[3]] = shortNOT(wires[words[1]])
+            wires[wire] = findVal(lines, wires, words[0])
+            return wires[wire]
 
-        if words[1] == 'AND':
-            if words[0].isdigit():
-                wires[words[4]] = shortAND(int(words[0]), wires[words[2]])
-            else:
-                wires[words[4]] = shortAND(wires[words[0]], wires[words[2]])
+        elif words[0] == 'NOT':
+            if words[3] != wire:
+                continue
 
-        if words[1] == 'OR':
-            wires[words[4]] = shortOR(wires[words[0]], wires[words[2]])
+            wires[wire] = shortNOT(findVal(lines, wires, words[1]))
+            return wires[wire]
 
-        if words[1] == 'LSHIFT':
-            wires[words[4]] = shortLSHIFT(wires[words[0]], int(words[2]))
+        else:
+            if words[4] != wire:
+                continue
 
-        if words[1] == 'RSHIFT':
-            wires[words[4]] = shortRSHIFT(wires[words[0]], int(words[2]))
-    
+            lhs = findVal(lines, wires, words[0])
+            rhs = findVal(lines, wires, words[2])
+
+            if words[1] == 'AND':
+                wires[wire] = shortAND(lhs, rhs)
+            elif words[1] == 'OR':
+                wires[wire] = shortOR(lhs, rhs)
+            elif words[1] == 'LSHIFT':
+                wires[wire] = shortLSHIFT(lhs, rhs)
+            elif words[1] == 'RSHIFT':
+                wires[wire] = shortRSHIFT(lhs, rhs)
+
+            return wires[wire]
+
+    return None
+
+wires = {}
+
+with open('input.txt') as f:
+    lines = f.readlines()
+
+tmp = findVal(lines, wires, 'a')
 
 print wires['a']
