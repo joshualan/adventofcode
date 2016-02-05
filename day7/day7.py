@@ -15,12 +15,18 @@ def shortOR(val1, val2):
 
 
 def findVal(lines, wires, wire):
+    # If the wire was already calculated, just return that
     if wire in wires:
         return wires[wire]
-
+        
+    # If it's a digit, just return that
     if wire.isdigit():
         return int(wire)
 
+    # Go through every line to find the gate that
+    # contains the wire we're looking for. Then,
+    # recursively find the value for each wire on
+    # that gate.
     for line in lines:
         words = line.split()
 
@@ -57,6 +63,7 @@ def findVal(lines, wires, wire):
 
             return wires[wire]
 
+    # If we get here, we're boned :) 
     return None
 
 wires = {}
@@ -67,3 +74,6 @@ with open('input.txt') as f:
 tmp = findVal(lines, wires, 'a')
 
 print wires['a']
+
+# Note: Answer to Input A is 956
+# Answer to Input B is 40149
