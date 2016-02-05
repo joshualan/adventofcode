@@ -1,5 +1,5 @@
 # adventofcode
 
-These are my solutions for the puzzles found on adventofcode.com. Just a fun little seasonal side-project :)
+These are my solutions for the puzzles found on http://adventofcode.com.
 
-Merry Christmas!
+It's always fun to keep your mind engaged. Plus, they're Christmas-themed and that's always a plus.
